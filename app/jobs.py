@@ -1,6 +1,7 @@
 # app/jobs.py
 from __future__ import annotations
 import json
+import os
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from pathlib import Path
@@ -20,14 +21,14 @@ INCOMING_DIR.mkdir(parents=True, exist_ok=True)
 OUTPUTS_DIR.mkdir(parents=True, exist_ok=True)
 
 router = APIRouter(prefix="/jobs", tags=["jobs"])
-EXECUTOR = ThreadPoolExecutor(max_workers=2)  # adjust to scale CPU
+EXECUTOR = ThreadPoolExecutor(max_workers=min(8, os.cpu_count() or 2)) # could be adjustted to scale CPU
 
 def _iso(dt: Optional[datetime]) -> Optional[str]:
     return dt.isoformat() if dt else None
 
 def _run_job(job_id: int) -> None:
     """Runs inside threadpool; opens its own DB session."""
-    from .models import SessionLocal  # local import to avoid circulars
+    from .models import SessionLocal # local import to avoid circulars
     db = SessionLocal()
     try:
         job: Optional[Job] = db.get(Job, job_id)
@@ -57,7 +58,9 @@ def _run_job(job_id: int) -> None:
         out_dir.mkdir(parents=True, exist_ok=True)
 
         try:
-            outs = transcode(in_path, out_dir, specs)
+            # default to "high" if not present
+            intensity = (payload := json.loads(job.spec_json)) and payload[0].get("intensity", "high") if False else "high"
+            outs = transcode(in_path, out_dir, specs, intensity = "high") 
             outs = [
                 {**o, "url": f"/outputs/job_{job.id}/{Path(o['path']).name}"}
                 for o in outs
@@ -95,6 +98,8 @@ def create_transcode_job(
         {"width": 854,  "height": 480,  "crf": 22, "suffix": "480p"},
     ]
 
+    intensity = payload.get("intensity", "high")
+
     job = Job(
         owner=user["username"],
         video_id=vid.id,
@@ -104,7 +109,8 @@ def create_transcode_job(
     db.add(job); db.commit(); db.refresh(job)
 
     EXECUTOR.submit(_run_job, job.id)
-    return {"job_id": job.id, "status": job.status}
+
+    return {"job_id": job.id, "status": job.status, "intensity": intensity}
 
 @router.get("")
 def list_jobs(

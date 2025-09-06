@@ -1,12 +1,12 @@
-# ---- base -------------------------------------------------------
+# base
 FROM python:3.11-slim
 
-# Install ffmpeg (CPU build)
+# install ffmpeg (CPU encoder)
 RUN apt-get update && apt-get install -y --no-install-recommends \
       ffmpeg ca-certificates && \
     rm -rf /var/lib/apt/lists/*
 
-# Create workdir
+# create workdir
 WORKDIR /app
 
 # Copy and install deps first (cached layer)
