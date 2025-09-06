@@ -136,6 +136,10 @@ ENV/
 env.bak/
 venv.bak/
 
+# Databases
+*.db
+
+
 # Spyder project settings
 .spyderproject
 .spyproject
@@ -182,4 +186,6 @@ cython_debug/
 
 # Ignore data outputs
 app/data/outputs/
+app/data/incoming/
 *.mp4
+*.webm
