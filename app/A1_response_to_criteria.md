@@ -7,14 +7,14 @@ Overview
 - **Name:** Kimiya Heidarzadeh Naeini
 - **Student number:** n11668075
 - **Application name:** My Video Transcoder
-- **Two line description:** This REST API allows user to upload and transcode in different resolutions (360, 480, 720, 1080p). Users can also view the history of their uploads and jobs in detail, while the admin has the privilage of accessing everyone's history.
+- **Two line description:** This REST API allows user to upload and transcode in different resolutions (360, 480, 720, 1080p). Users can also view the history of their uploads and jobs in detail, while the admin has the privilege of accessing everyone's history.
 
 Core criteria
 ------------------------------------------------
 
 ### Containerise the app
 
-- **ECR Repository name:**: n11668075-a1-transcoder
+- **ECR Repository name:** n11668075-a1-transcoder
 - **Video timestamp:**
 - **Relevant files:**
     - Dockerfile
@@ -28,7 +28,7 @@ Core criteria
 
 ### User login
 
-- **One line description:**: JWT authentication with admin, kimia, and sara accounts (hard-coded); tokens secure API endpoints
+- **One line description:** JWT authentication with admin, kimia, and sara accounts (hard-coded); tokens secure API endpoints
 - **Video timestamp:**
 - **Relevant files:**
     - auth.py (JWT logic)
