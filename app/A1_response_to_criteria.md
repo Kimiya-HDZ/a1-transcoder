@@ -143,3 +143,8 @@ Additional criteria
 - **Video timestamp:**
 - **Relevant files:**
     - 
+
+------------------------------------------------
+Acknowledgement | Use of Generative AI tools:
+Parts of this project were developed with help of ChatGPT (OpenAI), including guidance on Docker/EC2 setup, improving FFmpeg CPU intensity, and frontend UI improvements. The code was adapted, tested, and finalised by me.
+------------------------------------------------
